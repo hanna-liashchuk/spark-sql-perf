@@ -14,7 +14,7 @@ sparkPackageName := "databricks/spark-sql-perf"
 // All Spark Packages need a license
 licenses := Seq("Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0"))
 
-sparkVersion := "3.0.0"
+sparkVersion := "3.2.2"
 
 sparkComponents ++= Seq("sql", "hive", "mllib")
 
@@ -34,11 +34,26 @@ initialCommands in console :=
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.1"
 
-libraryDependencies += "com.twitter" %% "util-jvm" % "6.45.0" % "provided"
+libraryDependencies += "com.twitter" %% "util-jvm" % "6.45.0"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 libraryDependencies += "org.yaml" % "snakeyaml" % "1.23"
+
+libraryDependencies += "org.apache.spark" %% "spark-kubernetes" % sparkVersion.value %"provided"
+
+libraryDependencies += "org.bouncycastle" % "bcprov-jdk15on" % "1.68"
+
+libraryDependencies += "org.bouncycastle" % "bcpkix-jdk15on" % "1.68"
+
+libraryDependencies += "io.delta" %% "delta-core" % "2.0.0" %"provided"
+
+libraryDependencies += "org.apache.hadoop" % "hadoop-aws" % "2.7.4" %"provided"
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
 
 fork := true
 
