@@ -254,7 +254,7 @@ abstract class Tables(sqlContext: SQLContext, scaleFactor: String,
       if (!tableExists || overwrite) {
         println(s"Creating external table $name in database $databaseName using data stored in $location.")
         log.info(s"Creating external table $name in database $databaseName using data stored in $location.")
-        sqlContext.createExternalTable(qualifiedTableName, location, format)
+        sqlContext.sparkSession.sql(s"CREATE EXTERNAL TABLE ${qualifiedTableName} USING ${format} LOCATION '${location}'")
       }
       if (partitionColumns.nonEmpty && discoverPartitions) {
         println(s"Discovering partitions for table $name.")
