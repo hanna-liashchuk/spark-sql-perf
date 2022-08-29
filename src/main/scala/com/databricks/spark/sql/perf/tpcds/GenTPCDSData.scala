@@ -20,6 +20,7 @@ import org.apache.spark.sql.SparkSession
 
 case class GenTPCDSDataConfig(
     master: String = "local[*]",
+    databaseName: String = "spark_benchmarks",
     dsdgenDir: String = null,
     scaleFactor: String = null,
     location: String = null,
@@ -46,6 +47,10 @@ object GenTPCDSData {
       opt[String]('m', "master")
         .action { (x, c) => c.copy(master = x) }
         .text("the Spark master to use, default to local[*]")
+      opt[String]('d', "databaseName")
+        .action { (x, c) => c.copy(databaseName = x) }
+        .text("database name")
+        .required()
       opt[String]('d', "dsdgenDir")
         .action { (x, c) => c.copy(dsdgenDir = x) }
         .text("location of dsdgen")
@@ -117,5 +122,8 @@ object GenTPCDSData {
       filterOutNullPartitionValues = config.filterOutNullPartitionValues,
       tableFilter = config.tableFilter,
       numPartitions = config.numPartitions)
+
+    tables.createExternalTables(config.location, config.format, config.databaseName,
+      overwrite = config.overwrite, discoverPartitions = false)
   }
 }
